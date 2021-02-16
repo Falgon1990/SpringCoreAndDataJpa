@@ -15,10 +15,20 @@ import dominio.Servicio;
 import model.data.ClienteRepositorio;
 import model.data.ServicioRepositorio;
 import model.modelInterface.ModeloInterface;
-
+/**
+*Indicamos con el estereotipo @Service que esta clase va albergar la logica de negocio,
+*Centralizamos toda la parte de acceso a datos en un unico modelo , para que luego sea mas comodo utilzar los metodos 
+* de ambos repositorios.
+*/
 @Service
 public class ModelSpringData implements ModeloInterface {
-	
+	/**
+	*
+	*Autoinyectamos los objetos de lo repositorios por medio de la intefaz , si hubiera mas clases
+	*que implementase esta interfaz , produciria una exception , debido a que no sabria cual bean inyectar ,
+	* se podria modificar este comportamiento para evitar esa exception pues poniendo un Qualifier,o Primary.
+	*Puesto que el autoinyectado lo realizamos en ela propiedad no es necesario tener los setter.
+	*/
 	@Autowired
 	private ClienteRepositorio clientes;
 	@Autowired
@@ -60,7 +70,10 @@ public class ModelSpringData implements ModeloInterface {
 	public List<Servicio> todosServicios() {
 		return (List<Servicio>) servicios.findAll();
 	}
-
+	/**
+	*Aqui vamos a utilizar paginacion con un metodo que nos permite devolver una pagina en concreto , con un numero de elementos
+	* determinado , devolvera un tipo iterable ,crearemos una instancia de pageRequest que implementa la interfaz pageable.
+	*/
 	@Override
 	public Iterable<Cliente> paginaVariableCliente(int nPagina,int nElementos) {
 		PageRequest page=new PageRequest(nPagina,nElementos);
@@ -86,7 +99,12 @@ public class ModelSpringData implements ModeloInterface {
 		
 		return clientes.findAll(page);
 	}
-
+	/**
+	*
+	*Aunque si bien es cierto que en el principal no esta probado este metodo, si que lo he dejado implementado 
+	* para probarlo en un futuro , si vosotros quereis probarlo e mirar su funcionamiento ,o corregirlo  o mejorarlo
+	* podeis.
+	**/
 	@Override
 	public List<Cliente> paginaConBusquedaPorNombreYEmail(String nombre, String email,int nPagina) {
 		
@@ -120,7 +138,13 @@ public class ModelSpringData implements ModeloInterface {
 		// TODO Auto-generated method stub
 		return clientes.findByNombreEmpiezaAndProvinciaEmpieza(nombre, provincia);
 	}
-
+	/**
+	*
+	*Si bien el resto de metodos no los comento bueno por que no tienen ninguna caracteristica especial , este si porque cogiendo 
+	*una metodo declarado , podemos modificarlo pues ya sea agrupandolo, filtrandolo ... en mi caso lo realizo con java 8
+	* convirtiendo el arrayList en un stream(un Stream es un flujo de datos) de clientes , cuya flitracion sera de id del mismo a partir de 190 ,
+	*es una errataa en el nombre del metodo , recolectamos los datos del stream y lo reconvertimos de nuevo en un lista.
+	*/
 	@Override
 	public List<Cliente> filtradoDeClienteCuyoIdSeaMayorDeCincuenta(String nombre, String provincia) {
 	return this.busquedaDeClientesPorNombreEmpiezaAndProvincia(nombre, provincia). stream().filter(p -> p.getIdCliente() > 190).collect(Collectors.toList());
