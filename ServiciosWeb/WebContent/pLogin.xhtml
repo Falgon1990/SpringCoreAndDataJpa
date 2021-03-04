@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	 >
+<h:head>
+  <title>Gestor de Servicios </title>
+  
+</h:head>
+
+<body >
+
+    
+    <h:form prependId="false" action="/ServiciosWeb/j_spring_security_check" method="post">
+
+	
+		
+		<h:outputLabel for="j_username" value="Nombre"/>
+		<h:inputText id="j_username" value="#{controlador.nombre}"/>
+		<br/>
+		<h:outputText value="Contraseña"/>
+		<h:inputSecret id="j_password" value="#{controlador.password}"/>
+		
+		<br/>
+		<h:commandButton value="Login" action="#{controlador.login}" 
+		   				 class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+		   				 style="height:25px; width:75px;"/>
+			                				 			          		
+		<br/>
+			                
+  	  <f:metadata>
+		  <f:viewParam name="lgn" value="#{controlador.lgn}" />
+		</f:metadata>
+			                
+		<br/>
+		<h:outputText value="Error. Datos erróneos o usuario no habilitado"
+			          style="color:red; font-weigth:bold;"
+			          rendered="#{controlador.lgn=='f'}"/>
+
+	
+
+     	        
+	</h:form>
+
+	
+</body>
+</html>

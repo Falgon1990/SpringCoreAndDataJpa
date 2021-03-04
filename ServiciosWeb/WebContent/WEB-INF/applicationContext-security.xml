@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans 
+  xmlns= "http://www.springframework.org/schema/security"
+  xmlns:beans= "http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+                      http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                      http://www.springframework.org/schema/security
+                      http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+                    
+      <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	 	 <beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
+ <beans:property name="url" value="jdbc:mysql://localhost:3306/serviciost?allowPublicKeyRetrieval=true&amp;useSSL=false" />
+ <beans:property name="username" value="root" />
+ <beans:property name="password" value="48730209V" />
+	 	</beans:bean>                
+          <http>
+		 <intercept-url pattern="/faces/pAdministrador.xhtml" access="ROLE_ADMIN"/> 
+		 <intercept-url pattern="/faces/pUsuario.xhtml" access="ROLE_USER"/> 
+		 <form-login 
+		    login-page="/faces/pLogin.xhtml" 
+            default-target-url="/login_success" 
+            authentication-failure-url="/faces/pLogin.xhtml?lgn=f"
+            username-parameter="j_username"
+            password-parameter="j_password" />
+		
+		
+		<port-mappings>
+			<port-mapping http="8080" https="8443" /> <!-- Tomcat -->
+		</port-mappings>
+	</http>           
+       <authentication-manager>
+		<authentication-provider>
+		 	<password-encoder hash="bcrypt" /> 
+			<user-service>
+				<user name="admin"
+					password="$2a$04$Nu.efTJZQprhhUubk9TJuu9/HxMmZEOxYPfw9N/CQ.a4jKsRrLMiC"
+					authorities="ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
+	
+		<authentication-provider>
+		 
+			<jdbc-user-service data-source-ref="dataSource"
+				authorities-by-username-query="SELECT Usuario, Rol FROM tcliente WHERE Usuario = ?"
+				users-by-username-query="SELECT Usuario, Password, Habilitado FROM tcliente WHERE Usuario = ?" />
+		</authentication-provider>
+	</authentication-manager>
+                     
+                     
+</beans:beans>
